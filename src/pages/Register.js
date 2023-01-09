@@ -2,11 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import userRegistration from "../hooks/userRegistration";
-import { useNavigate } from "react-router-dom";
+import useRegistration from "../hooks/useRegistration";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 const Register = () => {
-    const navigate = useNavigate();
-    const register = userRegistration();
+    const register = useRegistration();
     const initialValues = {
         name: "",
         email: "",
@@ -31,10 +32,21 @@ const Register = () => {
         const { email, password, photo, name } = values;
         await register(email, password, photo, name);
         props.setSubmitting(false);
-        navigate("/login");
     };
     return (
         <div className="grid place-items-center mt-10 w-full">
+            <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover={false}
+                theme="colored"
+            />
             <div className="p-5 border-[1px] border-gray-400 rounded-md w-4/12">
                 <h1 className="font-bold text-3xl text-center text-blue-700">
                     Register
