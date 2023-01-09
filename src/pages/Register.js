@@ -26,7 +26,7 @@ const Register = () => {
     });
 
     const onSubmit = async (values, props) => {
-        await register(values.email, values.password);
+        await register(values.email, values.password, values.photo);
         props.setSubmitting(false);
     };
     return (
