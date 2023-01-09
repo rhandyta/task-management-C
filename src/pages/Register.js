@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import userRegistration from "../hooks/userRegistration";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
+    const navigate = useNavigate();
     const register = userRegistration();
     const initialValues = {
         name: "",
@@ -29,6 +31,7 @@ const Register = () => {
         const { email, password, photo, name } = values;
         await register(email, password, photo, name);
         props.setSubmitting(false);
+        navigate("/login");
     };
     return (
         <div className="grid place-items-center mt-10 w-full">

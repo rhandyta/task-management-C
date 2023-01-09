@@ -1,7 +1,8 @@
 import React from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, storage } from "../firebase/config";
+import { auth, db, storage } from "../firebase/config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 function userRegistration() {
     const register = async (email, password, photo, displayName) => {
         try {
@@ -26,9 +27,14 @@ function userRegistration() {
                     });
                 })
                 .catch((error) => console.log(error));
-            console.log(res.user);
 
             // menambahkan data user ke firestore
+            await setDoc(doc(db, "users", res.user.uid), {
+                online: false,
+                displayName: res.user.displayName,
+                photoURL: res.user.photoURL,
+                email: res.user.email,
+            });
         } catch (error) {
             if (error.code == "auth/email-already-in-use")
                 return alert("Email already exists");
