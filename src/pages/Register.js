@@ -24,7 +24,6 @@ const Register = () => {
     });
 
     const onSubmit = async (values, props) => {
-        console.log("ini adalah props onSubmit => ", props.dirty);
         props.setSubmitting(false);
     };
     return (
@@ -39,10 +38,6 @@ const Register = () => {
                     validationSchema={validationSchema}
                 >
                     {(props) => {
-                        console.log(
-                            "ini adalah props callbacknya => ",
-                            props.dirty
-                        );
                         return (
                             <Form className="mt-5 flex flex-col gap-4">
                                 <div>
