@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import userRegistration from "../hooks/userRegistration";
 const Register = () => {
+    const register = userRegistration();
     const initialValues = {
         name: "",
         email: "",
@@ -24,6 +26,7 @@ const Register = () => {
     });
 
     const onSubmit = async (values, props) => {
+        await register(values.email, values.password);
         props.setSubmitting(false);
     };
     return (
