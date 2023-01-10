@@ -8,14 +8,14 @@ const user = createSlice({
     name: "user",
     initialState,
     reducers: {
-        login: (state, action) => {
+        userLogin: (state, action) => {
             state.user = action.payload;
         },
-        logout: (state) => {
+        userLogout: (state) => {
             state.user = null;
         },
     },
 });
 
-export const { login, logout } = user.actions;
+export const { userLogin, userLogout } = user.actions;
 export default user.reducer;
