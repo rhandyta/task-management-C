@@ -2,8 +2,11 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
+import useLogin from "../hooks/useLogin";
+import { ToastContainer } from "react-toastify";
 
 const Login = () => {
+    const login = useLogin();
     const initialValues = {
         email: "",
         password: "",
@@ -15,11 +18,23 @@ const Login = () => {
     });
 
     const onSubmit = async (values, props) => {
-        props.setSubmitting(false);
-        console.log(values);
+        await login(values.email, values.password);
+        await props.setSubmitting(false);
     };
     return (
         <div className="grid place-items-center mt-32 w-full">
+            <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover={false}
+                theme="colored"
+            />
             <div className="p-5 border-[1px] border-gray-400 rounded-md w-4/12">
                 <h1 className="font-bold text-3xl text-center text-blue-700">
                     Login
