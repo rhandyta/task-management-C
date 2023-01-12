@@ -9,32 +9,38 @@ import {
     UserIcon,
 } from "@heroicons/react/24/outline";
 
-export const tasksCount = [
-    {
-        title: "All Tasks",
-        count: 30,
-        color: "text-blue-500",
-        icon: <DocumentDuplicateIcon width="50" className="text-blue-500" />,
-    },
-    {
-        title: "My Tasks",
-        count: 30,
-        color: "text-purple-500",
-        icon: <DocumentIcon width="50" className="text-purple-500" />,
-    },
-    {
-        title: "Completed Tasks",
-        count: 30,
-        color: "text-green-400",
-        icon: <DocumentCheckIcon width="50" className="text-green-400" />,
-    },
-    {
-        title: "Due Date",
-        count: 30,
-        color: "text-red-500",
-        icon: <ExclamationTriangleIcon width="50" className="text-red-500" />,
-    },
-];
+export const tasksCount = (allTasks, completedTasks, dueDateTasks, myTasks) => {
+    return [
+        {
+            title: "All Tasks",
+            count: allTasks,
+            color: "text-blue-500",
+            icon: (
+                <DocumentDuplicateIcon width="50" className="text-blue-500" />
+            ),
+        },
+        {
+            title: "My Tasks",
+            count: myTasks,
+            color: "text-purple-500",
+            icon: <DocumentIcon width="50" className="text-purple-500" />,
+        },
+        {
+            title: "Completed Tasks",
+            count: completedTasks,
+            color: "text-green-400",
+            icon: <DocumentCheckIcon width="50" className="text-green-400" />,
+        },
+        {
+            title: "Due Date",
+            count: dueDateTasks,
+            color: "text-red-500",
+            icon: (
+                <ExclamationTriangleIcon width="50" className="text-red-500" />
+            ),
+        },
+    ];
+};
 
 export const menus = [
     {
