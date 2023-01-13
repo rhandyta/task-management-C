@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { useSelector } from "react-redux";
 import Card from "../component/Card";
+import LoadingSkeleton from "../component/LoadingSkeleton";
 import useCompare from "../hooks/useCompare";
 import useGetTasks from "../hooks/useGetTasks";
 import { tasksCount } from "../utils/constant";
@@ -63,6 +64,7 @@ const Home = () => {
                         {taskAtWork.map((task) => (
                             <Card key={task.id} task={task} />
                         ))}
+                        {tasks.length === 0 && <LoadingSkeleton />}
                     </div>
                 </div>
                 {/* Completed Tasks */}
@@ -77,6 +79,7 @@ const Home = () => {
                         {taskCompleted.map((task) => (
                             <Card key={task.id} task={task} />
                         ))}
+                        {tasks.length === 0 && <LoadingSkeleton />}
                     </div>
                 </div>
                 {/* Due Date */}
@@ -91,6 +94,7 @@ const Home = () => {
                         {taskDueDate.map((task) => (
                             <Card key={task.id} task={task} />
                         ))}
+                        {tasks.length === 0 && <LoadingSkeleton />}
                     </div>
                 </div>
             </div>
