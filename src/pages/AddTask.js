@@ -8,9 +8,11 @@ import * as yup from "yup";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AddTask = () => {
     const { users, error } = useGetUsers();
+    const navigate = useNavigate();
     const [optionUsers, setOptionUsers] = useState([]);
     const categories = [
         { value: "UI DESIGNER", label: "UI DESIGNER" },
@@ -65,6 +67,9 @@ const AddTask = () => {
                     progress: undefined,
                     theme: "colored",
                 });
+                setTimeout(() => {
+                    navigate("/my-task");
+                }, 3000);
             })
             .catch((error) => {
                 toast.error("🦄 Something went wrong!", {

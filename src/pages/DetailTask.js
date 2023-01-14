@@ -6,18 +6,38 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Spinner from "../component/Spinner";
 import useGetTaskById from "../hooks/useGetTaskById";
 import useCompare from "../hooks/useCompare";
 import { useSelector } from "react-redux";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 const DetailTask = () => {
     const auth = useSelector((state) => state.user);
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+    const navigate = useNavigate();
     const { state: id } = useLocation();
     const { task, error } = useGetTaskById(id);
     const { isCompleted, isInWork, isDueDate } = useCompare();
     const myTask = task?.users.some((user) => user.id == auth.userId);
+
+    const handlerMarkAsCompleted = async () => {
+        await updateDoc(doc(db, "tasks", id), {
+            completed: true,
+        });
+    };
+
+    const deleteTask = async () => {
+        if (window.confirm("Are u sure?")) {
+            await deleteDoc(doc(db, "tasks", id));
+            return navigate("/");
+        }
+        return false;
+    };
+
     return !task ? (
         <div className="flex justify-center h-full items-center">
             <Spinner className="mr-40" />
@@ -42,7 +62,10 @@ const DetailTask = () => {
                     {myTask && (
                         <div className="flex gap-3">
                             {isInWork(task) && (
-                                <button className="bg-green-600 hover:bg-green-700 btn">
+                                <button
+                                    className="bg-green-600 hover:bg-green-700 btn"
+                                    onClick={handlerMarkAsCompleted}
+                                >
                                     Mark As Completed
                                 </button>
                             )}
@@ -68,7 +91,10 @@ const DetailTask = () => {
                                     </span>
                                 </div>
                             )}
-                            <button className="bg-red-600 hover:bg-red-700 btn">
+                            <button
+                                className="bg-red-600 hover:bg-red-700 btn"
+                                onClick={deleteTask}
+                            >
                                 <TrashIcon width="20" />
                             </button>
                         </div>
