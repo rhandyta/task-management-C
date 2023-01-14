@@ -27,7 +27,7 @@ a.active {
 }
 
 .avatar {
-    @apply w-8 rounded-full border-2 border-white;
+    @apply w-8 h-8 rounded-full border-2 border-white;
 }
 
 .tab {
