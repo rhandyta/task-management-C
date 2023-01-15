@@ -3,16 +3,19 @@ import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../features/userSlice";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { menus } from "../utils/constant";
+import useGetUsers from "../hooks/useGetUsers";
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
+
+    const { users } = useGetUsers();
+
     const handlerLogout = async () => {
-        const userRef = await doc(db, "users", user.userId);
-        updateDoc(userRef, {
+        await updateDoc(doc(db, "users", user.userId), {
             online: false,
         });
         dispatch(userLogout());
@@ -48,24 +51,22 @@ const Sidebar = () => {
                         Users Online
                     </h1>
                 </div>
-                <div className="px-6 text-sm py-1 text-gray-500 flex items-center">
-                    <span className="mr-4 w-2 h-2 bg-green-500 inline-block rounded-full"></span>
-                    <img
-                        src="https://static.vecteezy.com/system/resources/thumbnails/002/275/847/small/male-avatar-profile-icon-of-smiling-caucasian-man-vector.jpg"
-                        alt="avatar-user"
-                        className="avatar mr-2"
-                    />
-                    <h1>Nama User</h1>
-                </div>
-                <div className="px-6 text-sm py-1 text-gray-500 flex items-center">
-                    <span className="mr-4 w-2 h-2 bg-green-500 inline-block rounded-full"></span>
-                    <img
-                        src="https://static.vecteezy.com/system/resources/thumbnails/002/275/847/small/male-avatar-profile-icon-of-smiling-caucasian-man-vector.jpg"
-                        alt="avatar-user"
-                        className="avatar mr-2"
-                    />
-                    <h1>Nama User</h1>
-                </div>
+                {users
+                    .filter((user) => user.online)
+                    .map((user) => (
+                        <div
+                            className="px-6 text-sm py-1 text-gray-500 flex items-center"
+                            key={user.id}
+                        >
+                            <span className="mr-4 w-2 h-2 bg-green-500 inline-block rounded-full"></span>
+                            <img
+                                src={user.photoURL}
+                                alt="avatar-user"
+                                className="avatar mr-2"
+                            />
+                            <h1>{user.displayName}</h1>
+                        </div>
+                    ))}
             </div>
         </aside>
     );

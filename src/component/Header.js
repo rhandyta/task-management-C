@@ -13,7 +13,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const handleNavigate = (id) => {
-        navigate(`/detail/${id}`, { state: id });
+        navigate(`/detail/${id}`);
         setSearch("");
     };
     return (
@@ -30,7 +30,7 @@ const Header = () => {
                         )
                         .map((item) => (
                             <div
-                                className="result-search"
+                                className="result-search cursor-pointer"
                                 key={item.id}
                                 onClick={() => handleNavigate(item.id)}
                             >

@@ -6,7 +6,7 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Spinner from "../component/Spinner";
 import useGetTaskById from "../hooks/useGetTaskById";
 import useCompare from "../hooks/useCompare";
@@ -17,7 +17,7 @@ import { db } from "../firebase/config";
 const DetailTask = () => {
     const auth = useSelector((state) => state.user);
     const navigate = useNavigate();
-    const { state: id } = useLocation();
+    const { id } = useParams();
     const { task, error } = useGetTaskById(id);
     const { isCompleted, isInWork, isDueDate } = useCompare();
     const myTask = task?.users.some((user) => user.id == auth.userId);

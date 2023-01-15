@@ -12,7 +12,7 @@ import LabelCategory from "./LabelCategory";
 function Card({ task }) {
     const navigate = useNavigate();
     const handlerShow = () => {
-        navigate(`/detail/${task.id}`, { state: task.id });
+        navigate(`/detail/${task.id}`);
     };
     const { isInWork, isCompleted, isDueDate } = useCompare();
     return (
