@@ -1,25 +1,42 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import useGetTasks from "../hooks/useGetTasks";
 
 const Header = () => {
     const auth = useSelector((state) => state.user);
-    const isLoading = true;
+    const [search, setSearch] = useState("");
+    const { tasks } = useGetTasks();
+    const navigate = useNavigate();
+
+    const handleNavigate = (id) => {
+        navigate(`/detail/${id}`, { state: id });
+        setSearch("");
+    };
     return (
         <div className="h-12 flex justify-between relative items-center px-5 shadow-sm">
             <div
-                className={`container-searchba hidden ${
-                    isLoading && "w-[15rem] p-10 flex justify-center"
+                className={`container-search ${!search && "hidden"} ${
+                    tasks.length === 0 && "w-[15rem] p-10 flex justify-center"
                 }`}
             >
-                {!isLoading ? (
-                    <>
-                        <Link className="result-search">Hasil Search 1</Link>
-                        <Link className="result-search">Hasil Search 2</Link>
-                        <Link className="result-search">Hasil Search 3</Link>
-                    </>
+                {tasks.length !== 0 ? (
+                    tasks
+                        .filter((task) =>
+                            task.title.toLowerCase().includes(search)
+                        )
+                        .map((item) => (
+                            <div
+                                className="result-search"
+                                key={item.id}
+                                onClick={() => handleNavigate(item.id)}
+                            >
+                                {item.title}
+                            </div>
+                        ))
                 ) : (
                     <Spinner />
                 )}
@@ -30,6 +47,8 @@ const Header = () => {
                     type="text"
                     className="outline-none"
                     placeholder="Search..."
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                 />
             </div>
             <div className="flex items-center gap-2">

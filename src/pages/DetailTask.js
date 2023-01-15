@@ -16,8 +16,6 @@ import { db } from "../firebase/config";
 
 const DetailTask = () => {
     const auth = useSelector((state) => state.user);
-    const [isLoading, setIsLoading] = useState(false);
-    const [modalIsOpen, setIsOpen] = React.useState(false);
     const navigate = useNavigate();
     const { state: id } = useLocation();
     const { task, error } = useGetTaskById(id);
