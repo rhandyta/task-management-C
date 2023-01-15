@@ -5,7 +5,7 @@ import {
     PaperAirplaneIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Spinner from "../component/Spinner";
 import useGetTaskById from "../hooks/useGetTaskById";
@@ -16,13 +16,20 @@ import { db } from "../firebase/config";
 
 const DetailTask = () => {
     const auth = useSelector((state) => state.user);
-
+    const [isLoading, setIsLoading] = useState(false);
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const navigate = useNavigate();
     const { state: id } = useLocation();
     const { task, error } = useGetTaskById(id);
     const { isCompleted, isInWork, isDueDate } = useCompare();
     const myTask = task?.users.some((user) => user.id == auth.userId);
+
+    const [comment, setComment] = useState({
+        id: auth.userId,
+        displayName: auth.displayName,
+        photoURL: auth.photoURL,
+        body: "",
+    });
 
     const handlerMarkAsCompleted = async () => {
         await updateDoc(doc(db, "tasks", id), {
@@ -33,9 +40,21 @@ const DetailTask = () => {
     const deleteTask = async () => {
         if (window.confirm("Are u sure?")) {
             await deleteDoc(doc(db, "tasks", id));
-            return navigate("/");
+            return navigate(-1);
         }
         return false;
+    };
+
+    const handleComment = (e) => {
+        setComment({ ...comment, body: e.target.value });
+    };
+
+    const handleSubmitComment = async (e) => {
+        e.preventDefault();
+        await updateDoc(doc(db, "tasks", id), {
+            comments: [...task.comments, comment],
+        });
+        setComment({ ...comment, body: "" });
     };
 
     return !task ? (
@@ -104,26 +123,32 @@ const DetailTask = () => {
                 <div className="p-4 mt-4 border-[1px] rounded-md">
                     <h1 className="text-xl font-medium mb-3">Comments</h1>
                     <div className="mb-4">
-                        <div className="mb-3 w-fit flex gap-1">
-                            <img
-                                src="https://static.vecteezy.com/system/resources/thumbnails/002/275/847/small/male-avatar-profile-icon-of-smiling-caucasian-man-vector.jpg"
-                                alt="avatar-user"
-                                className="avatar mr-1 self-start"
-                            />
-                            <div className="bg-gray-100 p-1 px-4 rounded-lg">
-                                <h1 className="font-medium">Nama User</h1>
-                                <p className="text-sm">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit
-                                </p>
+                        {task.comments.map((comment, index) => (
+                            <div className="mb-3 w-fit flex gap-1" key={index}>
+                                <img
+                                    src={comment.photoURL}
+                                    alt="avatar-user"
+                                    className="avatar mr-1 self-start"
+                                />
+                                <div className="bg-gray-100 p-1 px-4 rounded-lg">
+                                    <h1 className="font-medium">
+                                        {comment.displayName}
+                                    </h1>
+                                    <p className="text-sm">{comment.body}</p>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
                     {myTask && (
-                        <form className="flex gap-2">
+                        <form
+                            className="flex gap-2"
+                            onSubmit={handleSubmitComment}
+                        >
                             <textarea
                                 type="text"
                                 className="basis-10/12 outline-none border-[1px] rounded-lg p-2"
+                                onChange={handleComment}
+                                value={comment.body}
                             />
                             <button
                                 type="submit"
